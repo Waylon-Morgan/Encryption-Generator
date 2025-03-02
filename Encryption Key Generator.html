@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption Key Generator</title>
+    <style>
+        /* Dark mode styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #333333; /* Dark container */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #ffffff; /* White text for headings */
+        }
+
+        .select-box {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #444444;
+            background-color: #222222;
+            color: #e0e0e0;
+        }
+
+        .select-box:focus {
+            border-color: #bbbbbb;
+        }
+
+        .output {
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+            word-wrap: break-word;
+            max-width: 90%;
+            margin: 0 auto;
+            background-color: #222222; /* Dark background for output */
+            padding: 10px;
+            border-radius: 5px;
+            color: #e0e0e0; /* Light text for output */
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Styling for the button when it's disabled */
+        button:disabled {
+            background-color: #555555;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Encryption Key Generator</h1>
+        <p>Select the encryption type to generate a random key:</p>
+        <select id="encryptionType" class="select-box">
+            <option value="aes256">AES-256 Key (64 characters)</option>
+            <option value="aes128">AES-128 Key (32 characters)</option>
+            <option value="arc4">ARC4-40 Key (10 characters)</option>
+            <option value="enhanced">Enhanced Encryption Key (32 characters)</option>
+            <option value="basic">Basic Encryption Key (4 characters)</option>
+        </select>
+        
+        <button onclick="generateKey()">Generate Key</button>
+
+        <div class="output" id="keyOutput"></div>
+    </div>
+
+    <script>
+        function generateKey() {
+            const encryptionType = document.getElementById('encryptionType').value;
+            let key = '';
+            let keyLength = 0;
+            let characters = '0123456789abcdef';
+            let randomChar = '';
+
+            // Define key lengths and cases for each encryption type
+            switch (encryptionType) {
+                case 'aes256':
+                    keyLength = 64;  // AES-256: 256-bit = 64 hex characters
+                    break;
+                case 'aes128':
+                    keyLength = 32;  // AES-128: 128-bit = 32 hex characters
+                    break;
+                case 'arc4':
+                    keyLength = 10;  // ARC4-40: 40-bit = 10 hex characters
+                    break;
+                case 'enhanced':
+                    keyLength = 32;  // Enhanced Encryption: 128-bit = 32 hex characters
+                    break;
+                case 'basic':
+                    keyLength = 4;   // Basic Encryption: 16-bit = 4 hex characters
+                    break;
+            }
+
+            // Generate the key
+            for (let i = 0; i < keyLength; i++) {
+                randomChar = characters.charAt(crypto.getRandomValues(new Uint32Array(1))[0] % characters.length);
+
+                // Randomly make the character uppercase or lowercase
+                if (Math.random() > 0.5) {
+                    randomChar = randomChar.toUpperCase();
+                }
+
+                key += randomChar;
+            }
+
+            // Display the generated key
+            document.getElementById('keyOutput').textContent = key;
+        }
+    </script>
+</body>
+</html>
